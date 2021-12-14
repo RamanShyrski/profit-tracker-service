@@ -22,7 +22,7 @@ security:
   oauth2:
     resource:
       userInfoUri: https://profit-tracker-service.auth.eu-north-1.amazoncognito.com/oauth2/userInfo
-      tokenInfoUri: https:///profit-tracker-service.auth.eu-north-1.amazoncognito.com/oauth2/token
+      tokenInfoUri: https://profit-tracker-service.auth.eu-north-1.amazoncognito.com/oauth2/token
       jwk:
         key-set-uri: ${COGNITO_KEY_SET_URL}
     client:
