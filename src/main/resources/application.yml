@@ -5,16 +5,25 @@ spring:
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
     hibernate:
       ddl-auto: none
+      naming:
+        physical-strategy: com.shyrski.profit.tracker.config.hibernate.UpperCaseNamingStrategy
   datasource:
-    url: jdbc:postgresql://localhost:5432/invest-stat-service?currentSchema=invest-stat
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mariadb://localhost:3306/profit-tracker-service
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: root
     hikari:
       maximum-pool-size: 5
 
-
-
+security:
+  oauth2:
+    resource:
+      userInfoUri: https://profit-tracker-service.auth.eu-north-1.amazoncognito.com/oauth2/userInfo
+      tokenInfoUri: https:///profit-tracker-service.auth.eu-north-1.amazoncognito.com/oauth2/token
+      jwk:
+        key-set-uri: ${COGNITO_KEY_SET_URL}
+    client:
+      clientId: ${COGNITO_CLIENT_ID}

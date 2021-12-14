@@ -1,5 +1,6 @@
 package com.shyrski.profit.tracker.model.db;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -16,12 +17,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Currency {
+public class Nft {
     @Id
-    private Long currencyId;
-    private String code;
+    private Long nftId;
     private String name;
+    private String imageKey;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "currency_type_id")
-    private CurrencyType currencyType;
+    @JoinColumn(name = "COLLECTION_ID")
+    private Collection collection;
+    @Embedded
+    private LogEntity logEntity;
 }

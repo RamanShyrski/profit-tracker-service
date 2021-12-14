@@ -1,11 +1,13 @@
-version: "3.9"
+version: '3.6'
 services:
-  postgres:
-    image: postgres:13.3
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+  mariadb:
+    image: mariadb:10.7
     ports:
-      - "5432:5432"
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: profit-tracker-service
+      MYSQL_USER: profit-tracker-service
+      MYSQL_PASSWORD: profit-tracker-service
+    volumes:
+      - D:/DockerSpace/mariadb-profit-tracker-service:/var/lib/mysql

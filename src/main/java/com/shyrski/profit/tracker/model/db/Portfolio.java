@@ -1,5 +1,6 @@
 package com.shyrski.profit.tracker.model.db;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,8 +14,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class CurrencyType {
+public class Portfolio {
     @Id
-    private Long currencyTypeId;
-    private String type;
+    private Long portfolioId;
+    private String name;
+    private String userId;
+    @Embedded
+    private LogEntity logEntity;
 }
