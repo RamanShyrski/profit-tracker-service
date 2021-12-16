@@ -8,9 +8,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
@@ -24,6 +22,6 @@ jobs:
       - name: Build and publish Docker image
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: rshyrski/profit-tracker-service
+          name: ${{ secrets.DOCKERHUB_USERNAME }}/profit-tracker-service
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}

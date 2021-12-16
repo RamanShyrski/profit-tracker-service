@@ -87,7 +87,6 @@
     </dependencies>
 
     <build>
-        <finalName>profit-tracker-service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
