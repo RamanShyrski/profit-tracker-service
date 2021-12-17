@@ -1,0 +1,18 @@
+version: '3.6'
+services:
+  mariadb:
+    image: mariadb:10.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: profit-tracker-service
+      MYSQL_USER: profit-tracker-service
+      MYSQL_PASSWORD: profit-tracker-service
+    volumes:
+      - D:/DockerSpace/mariadb-profit-tracker-service:/var/lib/mysql
+  profit-tracker-backend:
+     image: rshyrski/profit-tracker-service:latest
+     environment:
+       COGNITO_CLIENT_ID:
+       COGNITO_KEY_SET_URL:
