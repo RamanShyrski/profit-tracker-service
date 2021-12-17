@@ -17,9 +17,11 @@ services:
      image: rshyrski/profit-tracker-service:latest
      networks:
        - profit-tracker-service-network
+     ports:
+      - "8080:8080"
      environment:
        COGNITO_CLIENT_ID:
        COGNITO_KEY_SET_URL:
-       MARIADB_URL: jdbc:mariadb://profit-tracker-backend-1/profit-tracker-service
+       MARIADB_URL: jdbc:mariadb://mariadb/profit-tracker-service
 networks:
   profit-tracker-service-network: {}
