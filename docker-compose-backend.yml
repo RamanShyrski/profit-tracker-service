@@ -4,6 +4,8 @@ services:
     image: mariadb:10.7
     ports:
       - "3306:3306"
+    networks:
+      - profit-tracker-service-network
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: profit-tracker-service
@@ -13,7 +15,11 @@ services:
       - D:/DockerSpace/mariadb-profit-tracker-service:/var/lib/mysql
   profit-tracker-backend:
      image: rshyrski/profit-tracker-service:latest
+     networks:
+       - profit-tracker-service-network
      environment:
        COGNITO_CLIENT_ID:
        COGNITO_KEY_SET_URL:
-       MARIADB_URL: jdbc:mariadb://192.168.65.1:3306/profit-tracker-service
+       MARIADB_URL: jdbc:mariadb://profit-tracker-backend-1/profit-tracker-service
+networks:
+  profit-tracker-service-network: {}
