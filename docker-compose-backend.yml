@@ -18,7 +18,7 @@ services:
      networks:
        - profit-tracker-service-network
      ports:
-      - "8080:8080"
+       - "8080:8080"
      environment:
        COGNITO_CLIENT_ID:
        COGNITO_KEY_SET_URL:
