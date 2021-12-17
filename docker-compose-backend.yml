@@ -16,3 +16,4 @@ services:
      environment:
        COGNITO_CLIENT_ID:
        COGNITO_KEY_SET_URL:
+       MARIADB_URL: jdbc:mariadb://192.168.65.1:3306/profit-tracker-service
