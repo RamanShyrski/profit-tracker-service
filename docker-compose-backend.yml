@@ -12,7 +12,7 @@ services:
       MYSQL_USER: profit-tracker-service
       MYSQL_PASSWORD: profit-tracker-service
     volumes:
-      - D:/DockerSpace/mariadb-profit-tracker-service:/var/lib/mysql
+      - D:/DockerSpace/mariadb-profit-tracker-service:/var/lib/mysql #change to your local folder
   profit-tracker-backend:
      image: rshyrski/profit-tracker-service:latest
      networks:
