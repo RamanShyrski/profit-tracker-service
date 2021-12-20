@@ -23,8 +23,8 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public List<PortfolioDto> findAllPortfoliosForUser() {
         String userId = SecurityContextUtil.getCurrentUserId();
-        List<Portfolio> userPortfilios = portfolioRepository.findAllByUserId(userId);
+        List<Portfolio> userPortfolios = portfolioRepository.findAllByUserId(userId);
 
-        return portfolioMapper.toDtoList(userPortfilios);
+        return portfolioMapper.toDtoList(userPortfolios);
     }
 }

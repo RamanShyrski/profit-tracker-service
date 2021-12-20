@@ -23,6 +23,7 @@ public class Collection {
     @Id
     private Long collectionId;
     private String name;
+    private String imageKey;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PORTFOLIO_ID")
     private Portfolio portfolio;

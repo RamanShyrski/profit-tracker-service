@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CollectionDto {
     private Long collectionId;
+    private String image;
     private String name;
     private Long items;
 }

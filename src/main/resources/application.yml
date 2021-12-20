@@ -18,6 +18,13 @@ spring:
     hikari:
       maximum-pool-size: 5
 
+aws:
+  region: eu-north-1
+  key-id: ${AWS_KEY_ID}
+  key-secret: ${AWS_KEY_SECRET}
+  s3:
+    collection-image-bucket-name: profit-tracker-nft-bucket-dev
+
 security:
   oauth2:
     resource:
