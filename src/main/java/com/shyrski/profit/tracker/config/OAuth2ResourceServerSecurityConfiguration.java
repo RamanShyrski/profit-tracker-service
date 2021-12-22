@@ -1,6 +1,5 @@
 package com.shyrski.profit.tracker.config;
 
-
 import java.util.Collections;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class OAuth2ResourceServerSecurityConfiguration extends ResourceServerCon
 
     private final ResourceServerProperties resource;
 
-    private static final List<String> ENDPOINTS_WHITELIST= List.of("/actuator/health");
+    private static final List<String> ENDPOINTS_WHITELIST = List.of("/actuator/health");
 
     @Override
     public void configure(HttpSecurity http) throws Exception {

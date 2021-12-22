@@ -25,6 +25,9 @@ public class Collection {
     private String name;
     private String imageKey;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "NETWORK_ID")
+    private Network network;
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PORTFOLIO_ID")
     private Portfolio portfolio;
     @OneToMany(mappedBy = "collection")

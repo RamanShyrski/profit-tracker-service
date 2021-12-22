@@ -18,6 +18,8 @@
         <java.version>17</java.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <aws.sdk.version>1.12.129</aws.sdk.version>
+        <apache.commons.version>3.12.0</apache.commons.version>
+        <maven.plugin.compiler.version>3.5.1</maven.plugin.compiler.version>
     </properties>
 
     <dependencyManagement>
@@ -81,7 +83,6 @@
             <version>${aws.sdk.version}</version>
         </dependency>
 
-
         <!--Other-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -92,6 +93,11 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.version}</version>
         </dependency>
     </dependencies>
 
@@ -112,7 +118,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>${maven.plugin.compiler.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>

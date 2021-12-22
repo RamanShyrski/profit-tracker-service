@@ -1,5 +1,7 @@
 package com.shyrski.profit.tracker.mapper;
 
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
+
 import java.util.List;
 
 import org.mapstruct.Mapper;
@@ -24,12 +26,16 @@ public abstract class CollectionMapper {
 
     @Mapping(target = "items", source = "nfts", qualifiedByName = "generateItems")
     @Mapping(target = "image", source = "imageKey", qualifiedByName = "retrieveImageFromS3")
+    @Mapping(target = "network", source = "network.name")
     public abstract CollectionDto toDto(Collection collection);
 
     public abstract List<CollectionDto> toDtoList(List<Collection> collection);
 
     @Named("generateItems")
     protected Long generateItems(List<Nft> nfts) {
+        if (isEmpty(nfts)) {
+            return 0L;
+        }
         return (long) nfts.size();
     }
 

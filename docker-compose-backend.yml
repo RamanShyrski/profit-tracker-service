@@ -22,7 +22,7 @@ services:
      environment:
        COGNITO_CLIENT_ID:
        COGNITO_KEY_SET_URL:
-       MARIADB_URL: jdbc:mariadb://mariadb/profit-tracker-service
+       MARIADB_PASSWORD:
        AWS_KEY_ID:
        AWS_KEY_SECRET:
 networks:

@@ -11,7 +11,7 @@ spring:
       naming:
         physical-strategy: com.shyrski.profit.tracker.config.hibernate.UpperCaseNamingStrategy
   datasource:
-    url: ${MARIADB_URL}
+    url: jdbc:mariadb://localhost:3306/profit-tracker-service
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: root
@@ -23,7 +23,7 @@ aws:
   key-id: ${AWS_KEY_ID}
   key-secret: ${AWS_KEY_SECRET}
   s3:
-    collection-image-bucket-name: profit-tracker-nft-bucket-dev
+    collection-image-bucket-name: profit-tracker-bucket-dev/collection-images
 
 security:
   oauth2:
@@ -34,3 +34,15 @@ security:
         key-set-uri: ${COGNITO_KEY_SET_URL}
     client:
       clientId: ${COGNITO_CLIENT_ID}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:mariadb://profit-tracker-dev-database.cheq58mtgdlp.eu-north-1.rds.amazonaws.com:3306/profit-tracker-service
+    username: root
+    password: ${MARIADB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
