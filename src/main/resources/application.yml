@@ -41,7 +41,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:mariadb://profit-tracker-dev-database.cheq58mtgdlp.eu-north-1.rds.amazonaws.com:3306/profit-tracker-service
+    url: ${MARIADB_URL}
     username: root
     password: ${MARIADB_PASSWORD}
     hikari:
