@@ -34,7 +34,6 @@ security:
         key-set-uri: ${COGNITO_KEY_SET_URL}
     client:
       clientId: ${COGNITO_CLIENT_ID}
-
 ---
 spring:
   config:
