@@ -41,7 +41,7 @@ jobs:
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: aws-task-definition.json
+          task-definition: .github/workflows/aws-task-definition.json
           service: profit-tracker-dev-backend-service
           cluster: profit-tracker-dev-backend-cluster
           wait-for-service-stability: true
