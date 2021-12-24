@@ -25,24 +25,16 @@ jobs:
           name: ${{ secrets.DOCKERHUB_USERNAME }}/profit-tracker-service
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Deploy to aws
-        uses: silinternational/ecs-deploy@master
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws_access_key_cmd: '--aws-access-key'
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key_cmd: '--aws-secret-key'
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          cluster_cmd: '--cluster'
-          cluster: 'profit-tracker-dev-backend-cluster'
-          image_cmd: '--image'
-          image: docker.io/rshyrski/profit-tracker-service
-          region_cmd: '--region'
-          region: 'eu-north-1'
-          service_name_cmd: '--service-name'
-          service_name: 'profit-tracker-dev-backend'
-          timeout_cmd: '--timeout'
-          timeout: '400'
-          max_cmd: '--max'
-          max: '200'
-          min_cmd: '--min'
-          min: '0'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: profit-tracker-dev-task-definition
+          service: profit-tracker-dev-backend-service
+          cluster: profit-tracker-dev-backend-cluster
+          wait-for-service-stability: true
