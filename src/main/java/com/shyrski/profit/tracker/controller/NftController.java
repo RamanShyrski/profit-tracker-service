@@ -5,22 +5,23 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.shyrski.profit.tracker.model.dto.NftDto;
-import com.shyrski.profit.tracker.service.NftService;
 
-import lombok.RequiredArgsConstructor;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
-@RestController
+@Api
 @RequestMapping("/api/v1/nfts")
-@RequiredArgsConstructor
-public class NftController {
-
-    private final NftService nftService;
+public interface NftController {
 
     @GetMapping
-    public List<NftDto> findNftsInCollection(@RequestParam Long collectionId) {
-        return nftService.findNftsInCollection(collectionId);
-    }
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Nfts returned", response = NftDto.class, responseContainer = "List"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 500, message = "Internal Server Error")})
+    @ApiOperation(value = "Find all NFTs in collection", response = NftDto.class, responseContainer = "List",
+            produces = "application/json")
+    List<NftDto> findNftsInCollection(@RequestParam Long collectionId);
 }

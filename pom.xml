@@ -20,6 +20,7 @@
         <aws.sdk.version>1.12.129</aws.sdk.version>
         <apache.commons.version>3.12.0</apache.commons.version>
         <maven.plugin.compiler.version>3.5.1</maven.plugin.compiler.version>
+        <spring.fox.version>2.9.2</spring.fox.version>
     </properties>
 
     <dependencyManagement>
@@ -35,7 +36,6 @@
     </dependencyManagement>
 
     <dependencies>
-
         <!--Spring boot starters-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,7 +60,18 @@
         <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-            <version>2.0.1.RELEASE</version>
+        </dependency>
+
+        <!-- Swagger 2 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${spring.fox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${spring.fox.version}</version>
         </dependency>
 
         <!--Database migrations-->
@@ -138,5 +149,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

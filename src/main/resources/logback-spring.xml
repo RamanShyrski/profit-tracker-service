@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+    <property name="LOGS" value="./logs" />
+
+    <appender name="Console"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="RollingFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/profit-tracker-service.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/archived/profit-tracker-service-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </root>
+
+
+    <logger name="com.shyrski.profit.tracker" level="trace" additivity="false">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </logger>
+
+    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="debug" additivity="false">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </logger>
+
+</configuration>

@@ -1,3 +1,6 @@
+profit-tracker-service:
+  version: @project.version@
+
 spring:
   flyway:
     locations: classpath:db/migration
@@ -16,7 +19,7 @@ spring:
     username: root
     password: root
     hikari:
-      maximum-pool-size: 5
+      maximum-pool-size: 3
 
 aws:
   region: eu-north-1

@@ -4,22 +4,24 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.shyrski.profit.tracker.model.dto.PortfolioDto;
-import com.shyrski.profit.tracker.service.PortfolioService;
 
-import lombok.RequiredArgsConstructor;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
-@RestController
+@Api
 @RequestMapping("/api/v1/portfolios")
-@RequiredArgsConstructor
-public class PortfolioController {
-
-    private final PortfolioService portfolioService;
+public interface PortfolioController {
 
     @GetMapping
-    public List<PortfolioDto> findAllPortfoliosForUser() {
-        return portfolioService.findAllPortfoliosForUser();
-    }
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Portfolios returned", response = PortfolioDto.class, responseContainer = "List"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 500, message = "Internal Server Error")})
+    @ApiOperation(value = "Find all portfolios for user", response = PortfolioDto.class, responseContainer = "List",
+            produces = "application/json")
+    List<PortfolioDto> findAllPortfoliosForUser();
+
 }

@@ -17,11 +17,16 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class OAuth2ResourceServerSecurityConfiguration extends ResourceServerConfigurerAdapter {
+public class SecurityConfig extends ResourceServerConfigurerAdapter {
 
     private final ResourceServerProperties resource;
 
-    private static final List<String> ENDPOINTS_WHITELIST = List.of("/actuator/health");
+    private static final List<String> WHITELISTED_ENDPOINTS = List.of("/actuator/health",
+            "/v2/api-docs",
+            "/swagger-ui.html",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/webjars/**");
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -30,7 +35,7 @@ public class OAuth2ResourceServerSecurityConfiguration extends ResourceServerCon
         http.csrf().disable();
 
         http.authorizeRequests()
-                .antMatchers(ENDPOINTS_WHITELIST.toArray(new String[0]))
+                .antMatchers(WHITELISTED_ENDPOINTS.toArray(new String[0]))
                 .permitAll()
                 .anyRequest()
                 .authenticated();

@@ -1,4 +1,4 @@
-name: build and test
+name: build, test and deploy
 
 on:
   push:
@@ -38,10 +38,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Deploy Amazon ECS task definition
+      - name: Deploy task definition on DEV env
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: .github/workflows/aws-task-definition.json
+          task-definition: .github/workflows/aws-dev-task-definition.json
           service: profit-tracker-dev-backend-service
           cluster: profit-tracker-dev-backend-cluster
           wait-for-service-stability: true

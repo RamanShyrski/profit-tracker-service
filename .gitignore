@@ -8,4 +8,6 @@ postgres-data
 *.iml
 *.ipr
 
+logs/
+
 
