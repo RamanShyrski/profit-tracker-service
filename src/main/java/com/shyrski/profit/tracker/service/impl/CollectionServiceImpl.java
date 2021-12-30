@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.shyrski.profit.tracker.mapper.CollectionMapper;
 import com.shyrski.profit.tracker.model.db.Collection;
 import com.shyrski.profit.tracker.model.dto.CollectionDto;
+import com.shyrski.profit.tracker.model.dto.CollectionSearchDto;
 import com.shyrski.profit.tracker.repository.CollectionRepository;
 import com.shyrski.profit.tracker.service.CollectionService;
 
@@ -20,9 +21,9 @@ public class CollectionServiceImpl implements CollectionService {
     private final CollectionMapper collectionMapper;
 
     @Override
-    public List<CollectionDto> findAllCollections(Long portfolioId) {
-        List<Collection> collections = collectionRepository.findAllByPortfolioId(portfolioId);
-
+    public List<CollectionDto> findAllCollectionsBySearchCriteria(CollectionSearchDto collectionSearchDto) {
+        List<Collection> collections = collectionRepository.findAllBySearchCriteria(collectionSearchDto.getPortfolioId(),
+                collectionSearchDto.getName(), collectionSearchDto.getNetwork());
         return collectionMapper.toDtoList(collections);
     }
 }

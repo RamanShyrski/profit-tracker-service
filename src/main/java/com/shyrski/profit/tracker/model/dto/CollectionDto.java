@@ -3,11 +3,11 @@ package com.shyrski.profit.tracker.model.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class CollectionDto {
     @ApiModelProperty(position = 1, example = "93752354",
             value = "Collection unique identifier")

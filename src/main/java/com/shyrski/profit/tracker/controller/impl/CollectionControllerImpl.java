@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shyrski.profit.tracker.controller.CollectionController;
 import com.shyrski.profit.tracker.model.dto.CollectionDto;
+import com.shyrski.profit.tracker.model.dto.CollectionSearchDto;
 import com.shyrski.profit.tracker.service.CollectionService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class CollectionControllerImpl implements CollectionController {
     private final CollectionService collectionService;
 
     @Override
-    public List<CollectionDto> findAllCollectionsForPortfolio(Long portfolioId) {
-        return collectionService.findAllCollections(portfolioId);
+    public List<CollectionDto> findAllCollectionsBySearchCriteria(CollectionSearchDto collectionSearchDto) {
+        return collectionService.findAllCollectionsBySearchCriteria(collectionSearchDto);
     }
 }

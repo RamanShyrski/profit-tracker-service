@@ -1,12 +1,13 @@
 package com.shyrski.profit.tracker.controller;
 
 import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.shyrski.profit.tracker.model.dto.CollectionDto;
+import com.shyrski.profit.tracker.model.dto.CollectionSearchDto;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,5 +24,5 @@ public interface CollectionController {
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @ApiOperation(value = "Find NFT collections by portfolio id", response = CollectionDto.class, responseContainer = "List",
             produces = "application/json")
-    List<CollectionDto> findAllCollectionsForPortfolio(@RequestParam Long portfolioId);
+    List<CollectionDto> findAllCollectionsBySearchCriteria(@Valid CollectionSearchDto collectionSearchDto);
 }

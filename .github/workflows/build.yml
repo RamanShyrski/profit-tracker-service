@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,7 +17,7 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
-      - name: Build
+      - name: Build maven project
         run: mvn clean install
       - name: Build and publish Docker image
         uses: elgohr/Publish-Docker-Github-Action@master
@@ -25,6 +25,10 @@ jobs:
           name: ${{ secrets.DOCKERHUB_USERNAME }}/profit-tracker-service
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

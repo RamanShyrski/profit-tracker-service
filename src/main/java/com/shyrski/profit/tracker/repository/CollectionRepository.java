@@ -9,7 +9,16 @@ import org.springframework.data.repository.query.Param;
 import com.shyrski.profit.tracker.model.db.Collection;
 
 public interface CollectionRepository extends JpaRepository<Collection, Long> {
+    String FIND_ALL_COLLECTIONS = """
+            select *
+            from COLLECTION c
+                     inner join NETWORK n on c.NETWORK_ID = n.NETWORK_ID
+                     inner join PORTFOLIO p on c.PORTFOLIO_ID = p.PORTFOLIO_ID
+            where p.PORTFOLIO_ID = :portfolioId
+                AND (:name is NULL or c.NAME LIKE concat('%', :name, '%'))
+                AND (:network is NULL or n.NAME LIKE concat('%', :network, '%'))""";
 
-    @Query(value = "select * from COLLECTION c where c.portfolio_id=:portfolioId", nativeQuery = true)
-    List<Collection> findAllByPortfolioId(@Param("portfolioId") Long portfolioId);
+    @Query(value = FIND_ALL_COLLECTIONS, nativeQuery = true)
+    List<Collection> findAllBySearchCriteria(@Param("portfolioId") Long portfolioId, @Param("name") String name,
+                                             @Param("network") String network);
 }
