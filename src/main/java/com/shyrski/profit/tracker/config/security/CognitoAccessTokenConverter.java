@@ -1,4 +1,4 @@
-package com.shyrski.profit.tracker.config;
+package com.shyrski.profit.tracker.config.security;
 
 import java.util.Map;
 

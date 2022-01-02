@@ -16,7 +16,7 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
                      inner join PORTFOLIO p on c.PORTFOLIO_ID = p.PORTFOLIO_ID
             where p.PORTFOLIO_ID = :portfolioId
                 AND (:name is NULL or c.NAME LIKE concat('%', :name, '%'))
-                AND (:network is NULL or n.NAME LIKE concat('%', :network, '%'))""";
+                AND (:network is NULL or n.NAME = :network)""";
 
     @Query(value = FIND_ALL_COLLECTIONS, nativeQuery = true)
     List<Collection> findAllBySearchCriteria(@Param("portfolioId") Long portfolioId, @Param("name") String name,
