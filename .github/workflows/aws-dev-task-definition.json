@@ -93,10 +93,6 @@
   "placementConstraints": [],
   "memory": null,
   "taskRoleArn": null,
-  "compatibilities": [
-    "EXTERNAL",
-    "EC2"
-  ],
   "family": "profit-tracker-dev-task-definition",
   "pidMode": null,
   "networkMode": null,
