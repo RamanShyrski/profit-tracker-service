@@ -3,6 +3,7 @@ package com.shyrski.profit.tracker.controller;
 import java.util.List;
 import javax.validation.Valid;
 
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -33,5 +34,5 @@ public interface CollectionController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(schema = @Schema(implementation = ExceptionDetails.class)))})
     @Operation(summary = "Find NFT collections by portfolio id")
-    List<CollectionDto> findAllCollectionsBySearchCriteria(@Valid CollectionSearchDto collectionSearchDto);
+    List<CollectionDto> findAllCollectionsBySearchCriteria(@Valid @ParameterObject CollectionSearchDto collectionSearchDto);
 }
