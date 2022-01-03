@@ -20,6 +20,7 @@
         <aws.sdk.version>1.12.129</aws.sdk.version>
         <apache.commons.version>3.12.0</apache.commons.version>
         <maven.plugin.compiler.version>3.5.1</maven.plugin.compiler.version>
+        <springdoc.version>1.6.3</springdoc.version>
     </properties>
 
     <dependencyManagement>
@@ -65,11 +66,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- Swagger 2 -->
+        <!-- Swagger 3 -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.3</version>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!--Database migrations-->
