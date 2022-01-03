@@ -2,7 +2,7 @@ package com.shyrski.profit.tracker.model.dto;
 
 import javax.validation.constraints.NotNull;
 
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CollectionSearchDto {
     @NotNull
-    @ApiParam(value = "Portfolio unique identifier", required = true)
+    @Parameter(description = "Portfolio unique identifier", example = "552354", required = true)
     private Long portfolioId;
-    @ApiParam("Collection name")
+    @Parameter(description = "Collection name", example = "My collection")
     private String name;
-    @ApiParam("Collection network name")
+    @Parameter(description = "Network name", example = "Ethereum")
     private String network;
 }

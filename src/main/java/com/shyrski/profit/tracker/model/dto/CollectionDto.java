@@ -1,6 +1,6 @@
 package com.shyrski.profit.tracker.model.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,19 +9,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CollectionDto {
-    @ApiModelProperty(position = 1, example = "93752354",
-            value = "Collection unique identifier")
+    @Schema(description = "Collection unique identifier", example = "93752354", required = true)
     private Long collectionId;
-    @ApiModelProperty(position = 2, example = "Base64 encoded image",
-            value = "Base64 encoded image")
+    @Schema(description = "Base64 encoded image", example = "Base64 encoded image", required = true)
     private String image;
-    @ApiModelProperty(position = 3, example = "My collection",
-            value = "Collection name")
+    @Schema(description = "Collection name", example = "My collection", required = true)
     private String name;
-    @ApiModelProperty(position = 4, example = "4",
-            value = "Number of NFTs in collection")
+    @Schema(description = "Number of NFTs in collection", example = "4", required = true)
     private Long items;
-    @ApiModelProperty(position = 5, example = "Ethereum",
-            value = "Collection network name")
+    @Schema(description = "Collection network name", example = "Ethereum", required = true)
     private String network;
 }
