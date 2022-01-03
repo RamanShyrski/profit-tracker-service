@@ -20,7 +20,7 @@
         <aws.sdk.version>1.12.129</aws.sdk.version>
         <apache.commons.version>3.12.0</apache.commons.version>
         <maven.plugin.compiler.version>3.5.1</maven.plugin.compiler.version>
-        <spring.fox.version>2.9.2</spring.fox.version>
+        <spring.fox.version>3.0.0</spring.fox.version>
     </properties>
 
     <dependencyManagement>
