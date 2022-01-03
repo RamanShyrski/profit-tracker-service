@@ -25,11 +25,8 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     private static final List<String> WHITELISTED_ENDPOINTS = List.of("/actuator/health",
-            "/v2/api-docs",
-            "/swagger-ui.html",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/webjars/**");
+            "/v3/api-docs/**",
+            "/swagger-ui/**");
 
     @Override
     public void configure(HttpSecurity http) throws Exception {

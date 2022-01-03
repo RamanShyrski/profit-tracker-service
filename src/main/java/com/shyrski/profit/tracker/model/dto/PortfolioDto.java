@@ -1,6 +1,6 @@
 package com.shyrski.profit.tracker.model.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PortfolioDto {
-    @ApiModelProperty(position = 1, example = "3257512054",
-            value = "Portfolio unique identifier")
+    @Schema(description = "Portfolio unique identifier", example = "3257512054", required = true)
     private Long portfolioId;
-    @ApiModelProperty(position = 2, example = "My best portfolio",
-            value = "Portfolio name")
+    @Schema(description = "Portfolio name", example = "My best portfolio", required = true)
     private String name;
 }
