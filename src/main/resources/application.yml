@@ -28,6 +28,7 @@ aws:
   key-secret: ${AWS_KEY_SECRET}
   s3:
     collection-image-bucket-name: profit-tracker-bucket-dev/collection-images
+    nft-image-bucket-name: profit-tracker-bucket-dev/nfts
 
 security:
   oauth2:

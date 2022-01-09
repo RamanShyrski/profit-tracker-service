@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -40,6 +41,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionDetails> handleException(RuntimeException exception) {
         ExceptionDetails exceptionDetails = buildDetails(exception, FORBIDDEN);
         return new ResponseEntity<>(exceptionDetails, FORBIDDEN);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ExceptionDetails> handleException(MissingServletRequestParameterException exception) {
+        ExceptionDetails exceptionDetails = buildDetails(exception, BAD_REQUEST);
+        return new ResponseEntity<>(exceptionDetails, BAD_REQUEST);
     }
 
     @ExceptionHandler(BindException.class)

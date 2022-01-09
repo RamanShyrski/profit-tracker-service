@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NftDto {
-    private String nftId;
+    private Long nftId;
     private String name;
     private String image;
-    private String price;
+    private String floorPrice;
 }
