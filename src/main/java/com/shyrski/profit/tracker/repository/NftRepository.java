@@ -10,6 +10,6 @@ import com.shyrski.profit.tracker.model.db.Nft;
 
 public interface NftRepository extends JpaRepository<Nft, Long> {
 
-    @Query(value = "select * from NFT n where n.collection_id=:collectionId", nativeQuery = true)
-    List<Nft> findAllByCollectionId(@Param("collectionId") Long collectionId);
+    @Query(value = "select * from NFT n where n.collection_id=:collectionId AND (:name is NULL or n.NAME LIKE concat('%', :name, '%')) ", nativeQuery = true)
+    List<Nft> findAllBySearchCriteria(@Param("collectionId") Long collectionId, @Param("name") String name);
 }

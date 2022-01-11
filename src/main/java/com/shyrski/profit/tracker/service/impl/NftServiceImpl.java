@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.shyrski.profit.tracker.mapper.NftMapper;
 import com.shyrski.profit.tracker.model.db.Nft;
 import com.shyrski.profit.tracker.model.dto.NftDto;
+import com.shyrski.profit.tracker.model.dto.NftSearchDto;
 import com.shyrski.profit.tracker.repository.NftRepository;
 import com.shyrski.profit.tracker.service.NftService;
 
@@ -20,8 +21,8 @@ public class NftServiceImpl implements NftService {
     private final NftMapper nftMapper;
 
     @Override
-    public List<NftDto> findNftsInCollection(Long collectionId) {
-        List<Nft> nfts = nftRepository.findAllByCollectionId(collectionId);
+    public List<NftDto> findNftsInCollection(NftSearchDto nftSearchDto) {
+        List<Nft> nfts = nftRepository.findAllBySearchCriteria(nftSearchDto.getCollectionId(), nftSearchDto.getName());
 
         List<NftDto> nftDtos = nftMapper.toDtoList(nfts);
 
