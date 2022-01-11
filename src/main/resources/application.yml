@@ -39,6 +39,9 @@ security:
         key-set-uri: ${COGNITO_KEY_SET_URL}
     client:
       clientId: ${COGNITO_CLIENT_ID}
+
+opensea:
+  base-url: https://api.opensea.io/api/v1
 ---
 spring:
   config:

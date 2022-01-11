@@ -26,7 +26,8 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
 
     private static final List<String> WHITELISTED_ENDPOINTS = List.of("/actuator/health",
             "/v3/api-docs/**",
-            "/swagger-ui/**");
+            "/swagger-ui/**,",
+            "/api/v1/publicCollections");
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
