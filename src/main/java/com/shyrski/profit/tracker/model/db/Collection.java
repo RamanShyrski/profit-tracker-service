@@ -3,7 +3,9 @@ package com.shyrski.profit.tracker.model.db;
 import java.util.List;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,13 +23,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Collection {
     @Id
+    @GeneratedValue
     private Long collectionId;
     private String name;
     private String imageKey;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private CollectionType type;
+    private String idInMarketplace;
+    @ManyToOne
+    @JoinColumn(name = "MARKETPLACE_ID")
+    private CollectionMarketplace collectionMarketplace;
+    @ManyToOne
     @JoinColumn(name = "NETWORK_ID")
     private Network network;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "PORTFOLIO_ID")
     private Portfolio portfolio;
     @OneToMany(mappedBy = "collection")

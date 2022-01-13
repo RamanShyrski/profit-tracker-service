@@ -4,4 +4,6 @@ public interface S3BucketService {
 
     String retrieveBased64Image(String imageKey, String bucketName);
 
+    String uploadImage(String based64Image, String bucketName);
+
 }

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.shyrski.profit.tracker.model.db.Nft;
-import com.shyrski.profit.tracker.model.dto.NftDto;
+import com.shyrski.profit.tracker.model.dto.nft.NftDto;
 import com.shyrski.profit.tracker.service.S3BucketService;
 
 @Mapper(componentModel = "spring")

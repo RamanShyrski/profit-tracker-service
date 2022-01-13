@@ -1,4 +1,4 @@
-package com.shyrski.profit.tracker.model.dto.opensea;
+package com.shyrski.profit.tracker.model.dto.nft;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NftDto {
-
+    private Long nftId;
     private String name;
-    private CollectionDto collection;
-
+    private String image;
+    private String floorPrice;
 }

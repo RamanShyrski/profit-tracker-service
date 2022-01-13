@@ -52,4 +52,4 @@ spring:
     username: profit-tracker-service
     password: ${MARIADB_PASSWORD}
     hikari:
-      maximum-pool-size: 5
+      maximum-pool-size: 3

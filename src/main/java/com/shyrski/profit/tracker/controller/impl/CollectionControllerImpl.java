@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shyrski.profit.tracker.controller.CollectionController;
-import com.shyrski.profit.tracker.model.dto.CollectionDto;
-import com.shyrski.profit.tracker.model.dto.CollectionSearchDto;
+import com.shyrski.profit.tracker.model.dto.collection.CollectionDto;
+import com.shyrski.profit.tracker.model.dto.collection.CollectionSearchDto;
 import com.shyrski.profit.tracker.service.CollectionService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,5 +20,15 @@ public class CollectionControllerImpl implements CollectionController {
     @Override
     public List<CollectionDto> findAllCollectionsBySearchCriteria(CollectionSearchDto collectionSearchDto) {
         return collectionService.findAllCollectionsBySearchCriteria(collectionSearchDto);
+    }
+
+    @Override
+    public List<CollectionDto> getCollectionsFromOpenSeaAddress(String openSeaAddress) {
+        return collectionService.getCollectionsFromOpenSeaAddress(openSeaAddress);
+    }
+
+    @Override
+    public void createCollections(Long portfolioId,List<CollectionDto> collectionDtos) {
+        collectionService.createCollections(portfolioId, collectionDtos);
     }
 }

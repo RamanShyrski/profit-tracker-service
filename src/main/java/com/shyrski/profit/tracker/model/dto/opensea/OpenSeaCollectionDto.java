@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CollectionDto {
-
+public class OpenSeaCollectionDto {
     private String name;
     @JsonProperty("image_url")
     private String imageUrl;
-
+    @JsonProperty("owned_asset_count")
+    private Long items;
+    private String slug;
 }

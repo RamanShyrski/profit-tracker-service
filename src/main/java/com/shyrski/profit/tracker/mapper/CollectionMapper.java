@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.shyrski.profit.tracker.model.db.Collection;
 import com.shyrski.profit.tracker.model.db.Nft;
-import com.shyrski.profit.tracker.model.dto.CollectionDto;
+import com.shyrski.profit.tracker.model.dto.collection.CollectionDto;
+import com.shyrski.profit.tracker.model.dto.opensea.OpenSeaCollectionDto;
 import com.shyrski.profit.tracker.service.S3BucketService;
+import com.shyrski.profit.tracker.util.FileUtil;
 
 @Mapper(componentModel = "spring")
 public abstract class CollectionMapper {
@@ -27,9 +29,18 @@ public abstract class CollectionMapper {
     @Mapping(target = "items", source = "nfts", qualifiedByName = "generateItems")
     @Mapping(target = "image", source = "imageKey", qualifiedByName = "retrieveImageFromS3")
     @Mapping(target = "network", source = "network.name")
+    @Mapping(target = "marketplace", source = "collectionMarketplace.name")
     public abstract CollectionDto toDto(Collection collection);
 
     public abstract List<CollectionDto> toDtoList(List<Collection> collection);
+
+    @Mapping(target = "idInMarketplace", source = "slug")
+    @Mapping(target = "marketplace", constant = "opensea")
+    @Mapping(target = "type", constant = "PUBLIC")
+    @Mapping(target = "image", source = "imageUrl", qualifiedByName = "retrieveImage")
+    public abstract CollectionDto toDto(OpenSeaCollectionDto openSeaCollectionDto);
+
+    public abstract List<CollectionDto> toDtoListFromOpenSeaDtoList(List<OpenSeaCollectionDto> openSeaCollectionDto);
 
     @Named("generateItems")
     protected Long generateItems(List<Nft> nfts) {
@@ -42,5 +53,10 @@ public abstract class CollectionMapper {
     @Named("retrieveImageFromS3")
     protected String retrieveImageFromS3(String imageKey) {
         return s3BucketService.retrieveBased64Image(imageKey, collectionsImagesBucketName);
+    }
+
+    @Named("retrieveImage")
+    protected String retrieveImage(String imageUrl) {
+        return FileUtil.convertImageToBase64(imageUrl);
     }
 }

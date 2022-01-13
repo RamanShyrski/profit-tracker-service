@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.shyrski.profit.tracker.mapper.NftMapper;
 import com.shyrski.profit.tracker.model.db.Nft;
-import com.shyrski.profit.tracker.model.dto.NftDto;
-import com.shyrski.profit.tracker.model.dto.NftSearchDto;
+import com.shyrski.profit.tracker.model.dto.nft.NftDto;
+import com.shyrski.profit.tracker.model.dto.nft.NftSearchDto;
 import com.shyrski.profit.tracker.repository.NftRepository;
 import com.shyrski.profit.tracker.service.NftService;
 

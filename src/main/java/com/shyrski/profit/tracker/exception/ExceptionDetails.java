@@ -63,13 +63,30 @@ public class ExceptionDetails {
                 .build();
     }
 
-    public static ExceptionDetails resourceNotFound(String objectName, Long requestedId) {
+    public static ExceptionDetails resourceNotFound(Resource resource, Long requestedId) {
         List<ApiSubMessage> messages = new ArrayList<>();
 
         messages.add(ResourceNotFoundMessage.builder()
-                .object(objectName)
+                .object(resource.getValue())
                 .requestedId(requestedId)
-                .message(String.format("%s with id %d not found", objectName, requestedId))
+                .message(String.format("%s with id %d not found", resource.getValue(), requestedId))
+                .build());
+
+        return ExceptionDetails.builder()
+                .status(HttpStatus.NOT_FOUND)
+                .message(RESOURCE_NOT_FOUND)
+                .timestamp(LocalDateTime.now())
+                .subMessages(messages)
+                .build();
+    }
+
+    public static ExceptionDetails resourceNotFound(Resource resource) {
+        List<ApiSubMessage> messages = new ArrayList<>();
+
+        messages.add(ResourceNotFoundMessage.builder()
+                .object(resource.getValue())
+                .requestedId(null)
+                .message(String.format("Requested %s not found", resource.getValue()))
                 .build());
 
         return ExceptionDetails.builder()

@@ -1,4 +1,4 @@
-package com.shyrski.profit.tracker.model.dto;
+package com.shyrski.profit.tracker.model.dto.collection;
 
 import javax.validation.constraints.NotNull;
 

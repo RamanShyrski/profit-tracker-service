@@ -1,6 +1,5 @@
 package com.shyrski.profit.tracker.config;
 
-
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -33,6 +32,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServerException.class)
     public ResponseEntity<ExceptionDetails> handleException(ServerException exception) {
+        log.error("Exception happened", exception);
         return new ResponseEntity<>(exception.getExceptionDetails(),
                 exception.getExceptionDetails().getStatus());
     }
