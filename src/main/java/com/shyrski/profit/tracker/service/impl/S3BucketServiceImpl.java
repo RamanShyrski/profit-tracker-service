@@ -51,9 +51,9 @@ public class S3BucketServiceImpl implements S3BucketService {
 
         String fileName = UUID.randomUUID().toString();
 
-        /*s3client.putObject(new PutObjectRequest(
+        s3client.putObject(new PutObjectRequest(
                 bucketName, fileName, stream, meta)
-                .withCannedAcl(CannedAccessControlList.Private));*/
+                .withCannedAcl(CannedAccessControlList.Private));
 
         return fileName;
     }

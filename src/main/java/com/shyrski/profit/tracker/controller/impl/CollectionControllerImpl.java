@@ -28,7 +28,7 @@ public class CollectionControllerImpl implements CollectionController {
     }
 
     @Override
-    public void createCollections(Long portfolioId,List<CollectionDto> collectionDtos) {
+    public void createCollections(Long portfolioId, List<CollectionDto> collectionDtos) {
         collectionService.createCollections(portfolioId, collectionDtos);
     }
 }

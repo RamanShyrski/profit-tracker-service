@@ -6,10 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +25,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Collection {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "collection_generator")
+    @SequenceGenerator(name = "collection_generator", sequenceName = "collections_sequence")
     private Long collectionId;
     private String name;
     private String imageKey;

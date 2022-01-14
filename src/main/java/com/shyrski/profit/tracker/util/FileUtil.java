@@ -24,6 +24,4 @@ public class FileUtil {
 
         return Base64.getEncoder().encodeToString(bytes);
     }
-
-
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shyrski.profit.tracker.client.OpenSeaClient;
 import com.shyrski.profit.tracker.exception.ExceptionDetails;
@@ -64,8 +65,10 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    @Transactional
     public void createCollections(Long portfolioId, List<CollectionDto> collectionDtos) {
         List<Collection> listToCreate = new ArrayList<>();
+
         collectionDtos.forEach(collectionDto -> {
             Collection collection = new Collection();
 

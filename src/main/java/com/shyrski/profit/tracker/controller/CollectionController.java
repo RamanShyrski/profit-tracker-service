@@ -53,6 +53,14 @@ public interface CollectionController {
     List<CollectionDto> getCollectionsFromOpenSeaAddress(@RequestParam("address") String openSeaAddress);
 
     @PostMapping
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Bad request",
+                    content = @Content(schema = @Schema(implementation = ExceptionDetails.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(schema = @Schema(implementation = ExceptionDetails.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(schema = @Schema(implementation = ExceptionDetails.class)))})
     @Operation(summary = "Create NFT collections")
     void createCollections(@RequestParam Long portfolioId, @RequestBody List<CollectionDto> collectionDtos);
 }
