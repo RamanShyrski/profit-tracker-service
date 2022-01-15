@@ -42,6 +42,7 @@ security:
 
 opensea:
   base-url: https://api.opensea.io/api/v1
+  api-key: ${OPENSEA_API_KEY}
 ---
 spring:
   config:

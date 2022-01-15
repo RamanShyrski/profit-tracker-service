@@ -1,5 +1,9 @@
 package com.shyrski.profit.tracker.model.dto.collection;
 
+import java.util.List;
+
+import com.shyrski.profit.tracker.model.dto.nft.NftDto;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,4 +29,6 @@ public class CollectionDto {
     private String marketplace;
     @Schema(description = "CUSTOM or PUBLIC", example = "PUBLIC", required = true)
     private String type;
+    @Schema(description = "List of NFTS in this collection")
+    private List<NftDto> nfts;
 }

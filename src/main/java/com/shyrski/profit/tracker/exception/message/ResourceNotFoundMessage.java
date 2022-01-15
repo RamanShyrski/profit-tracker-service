@@ -11,6 +11,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ResourceNotFoundMessage implements ApiSubMessage {
     private String object;
-    private Long requestedId;
+    private String requestedId;
     private String message;
 }

@@ -1,11 +1,11 @@
 package com.shyrski.profit.tracker.service.impl;
 
+import static com.shyrski.profit.tracker.exception.message.ExceptionMessages.INVALID_PORTFOLIO_ID;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,39 +14,33 @@ import com.shyrski.profit.tracker.exception.ExceptionDetails;
 import com.shyrski.profit.tracker.exception.Resource;
 import com.shyrski.profit.tracker.exception.ServerException;
 import com.shyrski.profit.tracker.mapper.CollectionMapper;
+import com.shyrski.profit.tracker.mapper.NftMapper;
 import com.shyrski.profit.tracker.model.db.Collection;
-import com.shyrski.profit.tracker.model.db.CollectionMarketplace;
-import com.shyrski.profit.tracker.model.db.CollectionType;
-import com.shyrski.profit.tracker.model.db.LogEntity;
-import com.shyrski.profit.tracker.model.db.Network;
+import com.shyrski.profit.tracker.model.db.Nft;
 import com.shyrski.profit.tracker.model.db.Portfolio;
 import com.shyrski.profit.tracker.model.dto.collection.CollectionDto;
 import com.shyrski.profit.tracker.model.dto.collection.CollectionSearchDto;
+import com.shyrski.profit.tracker.model.dto.nft.NftDto;
+import com.shyrski.profit.tracker.model.dto.opensea.OpenSeaAssetsResponse;
 import com.shyrski.profit.tracker.model.dto.opensea.OpenSeaCollectionDto;
-import com.shyrski.profit.tracker.repository.CollectionMarketplaceRepository;
 import com.shyrski.profit.tracker.repository.CollectionRepository;
-import com.shyrski.profit.tracker.repository.NetworkRepository;
+import com.shyrski.profit.tracker.repository.NftRepository;
 import com.shyrski.profit.tracker.repository.PortfolioRepository;
 import com.shyrski.profit.tracker.repository.specification.CollectionSpecification;
 import com.shyrski.profit.tracker.service.CollectionService;
-import com.shyrski.profit.tracker.service.S3BucketService;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CollectionServiceImpl implements CollectionService {
-
     private final CollectionRepository collectionRepository;
     private final CollectionMapper collectionMapper;
+    private final NftMapper nftMapper;
     private final OpenSeaClient openSeaClient;
-    private final S3BucketService s3BucketService;
-    private final CollectionMarketplaceRepository collectionMarketplaceRepository;
-    private final NetworkRepository networkRepository;
     private final PortfolioRepository portfolioRepository;
-
-    @Value("${aws.s3.collection-image-bucket-name}")
-    private String collectionsImagesBucketName;
+    private final NftRepository nftRepository;
 
     @Override
     public List<CollectionDto> findAllCollectionsBySearchCriteria(CollectionSearchDto collectionSearchDto) {
@@ -58,50 +52,47 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public List<CollectionDto> getCollectionsFromOpenSeaAddress(String openSeaAddress) {
-        List<OpenSeaCollectionDto> collections =
-                openSeaClient.findCollections(openSeaAddress, 300, 0);
+        List<OpenSeaCollectionDto> collections;
+        try {
+            collections = openSeaClient.findCollections(openSeaAddress, 300, 0);
+        } catch (FeignException.BadRequest badRequest) {
+            throw new ServerException(ExceptionDetails.resourceNotFound(Resource.OPENSEA_ADDRESS, openSeaAddress));
+        }
 
-        return collectionMapper.toDtoListFromOpenSeaDtoList(collections);
+        List<CollectionDto> collectionDtos = collectionMapper.toDtoListFromOpenSeaDtoList(collections);
+
+        collectionDtos.forEach(collectionDto -> {
+            OpenSeaAssetsResponse collectionNftsDtos =
+                    openSeaClient.findNftsInCollection(openSeaAddress, collectionDto.getIdInMarketplace(), 50, 0);
+            List<NftDto> nftDtos = nftMapper.toDtoListFromOpenSeaDtoList(collectionNftsDtos.getAssets());
+
+            collectionDto.setNfts(nftDtos);
+        });
+
+        return collectionDtos;
     }
 
     @Override
     @Transactional
     public void createCollections(Long portfolioId, List<CollectionDto> collectionDtos) {
-        List<Collection> listToCreate = new ArrayList<>();
+        List<Nft> nftsToCreate = new ArrayList<>();
+        List<Collection> collectionsToCreate = collectionMapper.fromDtoList(collectionDtos);
 
-        collectionDtos.forEach(collectionDto -> {
-            Collection collection = new Collection();
+        Portfolio portfolio = portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new ServerException(ExceptionDetails.badRequest(INVALID_PORTFOLIO_ID)));
 
-            if (isNotEmpty(collectionDto.getImage())) {
-                collection.setImageKey(s3BucketService.uploadImage(collectionDto.getImage(), collectionsImagesBucketName));
-            }
-
-            collection.setName(collectionDto.getName());
-            collection.setType(CollectionType.valueOf(collectionDto.getType()));
-
-            collection.setIdInMarketplace(collectionDto.getIdInMarketplace());
-
-            if (isNotEmpty(collectionDto.getMarketplace())) {
-                CollectionMarketplace collectionMarketplace = collectionMarketplaceRepository.findByName(collectionDto.getMarketplace())
-                        .orElseThrow(() -> new ServerException(ExceptionDetails.resourceNotFound(Resource.MARKETPLACE)));
-                collection.setCollectionMarketplace(collectionMarketplace);
-            }
-
-            if (isNotEmpty(collectionDto.getNetwork())) {
-                Network network = networkRepository.findByName(collectionDto.getNetwork())
-                        .orElseThrow(() -> new ServerException(ExceptionDetails.resourceNotFound(Resource.NETWORK)));
-                collection.setNetwork(network);
-            }
-
-            Portfolio portfolio = portfolioRepository.findById(portfolioId)
-                    .orElseThrow(() -> new ServerException(ExceptionDetails.resourceNotFound(Resource.PORTFOLIO, portfolioId)));
+        collectionsToCreate.forEach(collection -> {
             collection.setPortfolio(portfolio);
 
-            collection.setLogEntity(new LogEntity());
-
-            listToCreate.add(collection);
+            if (isNotEmpty(collection.getNfts())) {
+                collection.getNfts().forEach(nft -> nft.setCollection(collection));
+                nftsToCreate.addAll(collection.getNfts());
+            }
         });
 
-        collectionRepository.saveAll(listToCreate);
+        collectionRepository.saveAllAndFlush(collectionsToCreate);
+        if (!nftsToCreate.isEmpty()) {
+            nftRepository.saveAll(nftsToCreate);
+        }
     }
 }

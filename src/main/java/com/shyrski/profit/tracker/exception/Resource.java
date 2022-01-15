@@ -8,7 +8,9 @@ public enum Resource {
 
     PORTFOLIO("Portfolio"),
     NETWORK("Network"),
-    MARKETPLACE("Marketplace");
+    MARKETPLACE("Marketplace"),
+    OPENSEA_ADDRESS("OpenSea address"),
+    COLLECTION_TYPE("Collection type");
 
     @Getter
     private final String value;

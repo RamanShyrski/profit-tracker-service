@@ -23,8 +23,8 @@ public class CollectionControllerImpl implements CollectionController {
     }
 
     @Override
-    public List<CollectionDto> getCollectionsFromOpenSeaAddress(String openSeaAddress) {
-        return collectionService.getCollectionsFromOpenSeaAddress(openSeaAddress);
+    public List<CollectionDto> getCollectionsFromOpenSeaAddress(String address) {
+        return collectionService.getCollectionsFromOpenSeaAddress(address);
     }
 
     @Override

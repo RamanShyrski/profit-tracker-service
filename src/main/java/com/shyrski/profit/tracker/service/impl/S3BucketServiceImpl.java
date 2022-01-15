@@ -57,4 +57,20 @@ public class S3BucketServiceImpl implements S3BucketService {
 
         return fileName;
     }
+
+    @Override
+    public String uploadFile(byte[] content, String bucketName) {
+        InputStream stream = new ByteArrayInputStream(content);
+
+        ObjectMetadata meta = new ObjectMetadata();
+        meta.setContentLength(content.length);
+
+        String fileName = UUID.randomUUID().toString();
+
+        s3client.putObject(new PutObjectRequest(
+                bucketName, fileName, stream, meta)
+                .withCannedAcl(CannedAccessControlList.Private));
+
+        return fileName;
+    }
 }
