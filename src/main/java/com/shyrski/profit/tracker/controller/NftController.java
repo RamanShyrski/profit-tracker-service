@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.shyrski.profit.tracker.exception.ExceptionDetails;
-import com.shyrski.profit.tracker.model.dto.NftDto;
-import com.shyrski.profit.tracker.model.dto.NftSearchDto;
+import com.shyrski.profit.tracker.model.dto.nft.NftDto;
+import com.shyrski.profit.tracker.model.dto.nft.NftSearchDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

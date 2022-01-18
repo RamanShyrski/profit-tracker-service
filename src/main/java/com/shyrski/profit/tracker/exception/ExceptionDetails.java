@@ -25,7 +25,6 @@ public class ExceptionDetails {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime timestamp;
     private String message;
-    private String debugMessage;
     private List<ApiSubMessage> subMessages;
 
     public static ExceptionDetails internalServerError(String message) {
@@ -41,7 +40,6 @@ public class ExceptionDetails {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .timestamp(LocalDateTime.now())
                 .message(message)
-                .debugMessage(e.getMessage())
                 .build();
     }
 
@@ -50,7 +48,6 @@ public class ExceptionDetails {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .timestamp(LocalDateTime.now())
                 .message(message)
-                .debugMessage(debugMessage)
                 .build();
     }
 
@@ -63,13 +60,13 @@ public class ExceptionDetails {
                 .build();
     }
 
-    public static ExceptionDetails resourceNotFound(String objectName, Long requestedId) {
+    public static ExceptionDetails resourceNotFound(Resource resource, String requestedId) {
         List<ApiSubMessage> messages = new ArrayList<>();
 
         messages.add(ResourceNotFoundMessage.builder()
-                .object(objectName)
+                .object(resource.getValue())
                 .requestedId(requestedId)
-                .message(String.format("%s with id %d not found", objectName, requestedId))
+                .message(String.format("%s with id %s not found", resource.getValue(), requestedId))
                 .build());
 
         return ExceptionDetails.builder()
@@ -77,6 +74,31 @@ public class ExceptionDetails {
                 .message(RESOURCE_NOT_FOUND)
                 .timestamp(LocalDateTime.now())
                 .subMessages(messages)
+                .build();
+    }
+
+    public static ExceptionDetails resourceNotFound(Resource resource, Long requestedId) {
+        List<ApiSubMessage> messages = new ArrayList<>();
+
+        messages.add(ResourceNotFoundMessage.builder()
+                .object(resource.getValue())
+                .requestedId(String.valueOf(requestedId))
+                .message(String.format("%s with id %d not found", resource.getValue(), requestedId))
+                .build());
+
+        return ExceptionDetails.builder()
+                .status(HttpStatus.NOT_FOUND)
+                .message(RESOURCE_NOT_FOUND)
+                .timestamp(LocalDateTime.now())
+                .subMessages(messages)
+                .build();
+    }
+
+    public static ExceptionDetails badRequest(String message) {
+        return ExceptionDetails.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(message)
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 

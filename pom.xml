@@ -21,6 +21,7 @@
         <apache.commons.version>3.12.0</apache.commons.version>
         <maven.plugin.compiler.version>3.5.1</maven.plugin.compiler.version>
         <springdoc.version>1.6.3</springdoc.version>
+        <apache.tika.version>2.2.1</apache.tika.version>
     </properties>
 
     <dependencyManagement>
@@ -109,6 +110,24 @@
             <artifactId>commons-lang3</artifactId>
             <version>${apache.commons.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>${apache.tika.version}</version>
+        </dependency>
+
+        <!--Tests-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.0.206</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shyrski.profit.tracker.controller.NftController;
-import com.shyrski.profit.tracker.model.dto.NftDto;
-import com.shyrski.profit.tracker.model.dto.NftSearchDto;
+import com.shyrski.profit.tracker.model.dto.nft.NftDto;
+import com.shyrski.profit.tracker.model.dto.nft.NftSearchDto;
 import com.shyrski.profit.tracker.service.NftService;
 
 import lombok.RequiredArgsConstructor;
