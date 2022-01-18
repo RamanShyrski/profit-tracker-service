@@ -3,18 +3,24 @@ package com.shyrski.profit.tracker.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Base64;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.shyrski.profit.tracker.exception.ExceptionDetails;
+import com.shyrski.profit.tracker.exception.ServerException;
 import com.shyrski.profit.tracker.service.S3BucketService;
 
 import lombok.RequiredArgsConstructor;
@@ -45,32 +51,35 @@ public class S3BucketServiceImpl implements S3BucketService {
         byte[] contents = Base64.getDecoder().decode(based64Image);
         InputStream stream = new ByteArrayInputStream(contents);
 
-        ObjectMetadata meta = new ObjectMetadata();
-        meta.setContentLength(contents.length);
-        meta.setContentType("image/png");
+        String mimeType;
 
-        String fileName = UUID.randomUUID().toString();
+        try {
+            mimeType = URLConnection.guessContentTypeFromStream(stream);
+        } catch (IOException e) {
+            throw new ServerException(ExceptionDetails.internalServerError("Cannot extract mime type from input stream", e));
+        }
 
-        s3client.putObject(new PutObjectRequest(
-                bucketName, fileName, stream, meta)
-                .withCannedAcl(CannedAccessControlList.Private));
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(contents.length);
+        objectMetadata.setContentType(mimeType);
 
-        return fileName;
+        String fileName = UUID.randomUUID() + getFileExtensionFromMimeType(mimeType);
+
+        s3client.putObject(new PutObjectRequest(bucketName, fileName, stream, objectMetadata));
+
+        URL url = s3client.getUrl(bucketName, fileName);
+
+        return url.toString();
     }
 
-    @Override
-    public String uploadFile(byte[] content, String bucketName) {
-        InputStream stream = new ByteArrayInputStream(content);
-
-        ObjectMetadata meta = new ObjectMetadata();
-        meta.setContentLength(content.length);
-
-        String fileName = UUID.randomUUID().toString();
-
-        s3client.putObject(new PutObjectRequest(
-                bucketName, fileName, stream, meta)
-                .withCannedAcl(CannedAccessControlList.Private));
-
-        return fileName;
+    private String getFileExtensionFromMimeType(String mimeType) {
+        MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
+        MimeType type;
+        try {
+            type = allTypes.forName(mimeType);
+        } catch (MimeTypeException e) {
+            throw new ServerException(ExceptionDetails.internalServerError("Cannot extract file extension from mime type", e));
+        }
+        return type.getExtension();
     }
 }

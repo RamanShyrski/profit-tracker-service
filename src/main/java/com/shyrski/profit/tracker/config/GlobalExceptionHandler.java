@@ -8,16 +8,15 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import javax.validation.ConstraintViolationException;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -47,6 +46,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionDetails> handleException(RuntimeException exception) {
         ExceptionDetails exceptionDetails = buildDetails(exception, FORBIDDEN);
         return new ResponseEntity<>(exceptionDetails, FORBIDDEN);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionDetails> handleException(HttpMessageNotReadableException exception) {
+        ExceptionDetails exceptionDetails = buildDetails(exception, BAD_REQUEST);
+        return new ResponseEntity<>(exceptionDetails, BAD_REQUEST);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)

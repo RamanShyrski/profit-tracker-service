@@ -6,6 +6,4 @@ public interface S3BucketService {
 
     String uploadImage(String based64Image, String bucketName);
 
-    String uploadFile(byte[] content, String bucketName);
-
 }

@@ -47,7 +47,7 @@ public abstract class CollectionMapper {
     private String collectionsImagesBucketName;
 
     @Mapping(target = "items", source = "nfts", qualifiedByName = "generateItems")
-    @Mapping(target = "image", source = "imageKey", qualifiedByName = "retrieveImageFromS3")
+    @Mapping(target = "image", source = "imageKey")
     @Mapping(target = "network", source = "network.name")
     @Mapping(target = "marketplace", source = "collectionMarketplace.name")
     @Mapping(target = "nfts", source = "nfts", qualifiedByName = "mapNftListToDto")
@@ -58,7 +58,7 @@ public abstract class CollectionMapper {
     @Mapping(target = "idInMarketplace", source = "slug")
     @Mapping(target = "marketplace", constant = "opensea")
     @Mapping(target = "type", constant = "PUBLIC")
-    @Mapping(target = "image", source = "imageUrl", qualifiedByName = "retrieveImage")
+    @Mapping(target = "image", source = "imageUrl")
     public abstract CollectionDto toDto(OpenSeaCollectionDto openSeaCollectionDto);
 
     @Mapping(target = "imageKey", source = "image", qualifiedByName = "uploadImageToS3")
@@ -78,16 +78,6 @@ public abstract class CollectionMapper {
             return 0L;
         }
         return (long) nfts.size();
-    }
-
-    @Named("retrieveImageFromS3")
-    protected String retrieveImageFromS3(String imageKey) {
-        return s3BucketService.retrieveBased64Image(imageKey, collectionsImagesBucketName);
-    }
-
-    @Named("retrieveImage")
-    protected String retrieveImage(String imageUrl) {
-        return FileUtil.convertImageToBase64(imageUrl);
     }
 
     @Named("uploadImageToS3")

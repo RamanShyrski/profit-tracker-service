@@ -2,6 +2,11 @@ package com.shyrski.profit.tracker.model.dto.collection;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.shyrski.profit.tracker.model.db.CollectionType;
 import com.shyrski.profit.tracker.model.dto.nft.NftDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,8 +20,10 @@ import lombok.NoArgsConstructor;
 public class CollectionDto {
     @Schema(description = "Collection unique identifier in our system", example = "93752354")
     private Long collectionId;
-    @Schema(description = "Base64 encoded image", example = "Base64 encoded image", required = true)
+    @NotNull
+    @Schema(description = "Base64 encoded image or image url", example = "Base64 encoded image or image url")
     private String image;
+    @NotBlank
     @Schema(description = "Collection name", example = "My collection", required = true)
     private String name;
     @Schema(description = "Number of NFTs in collection", example = "4", required = true)
@@ -27,8 +34,9 @@ public class CollectionDto {
     private String idInMarketplace;
     @Schema(description = "If collection is public, it's marketplace name", example = "opensea")
     private String marketplace;
+    @NotNull
     @Schema(description = "CUSTOM or PUBLIC", example = "PUBLIC", required = true)
-    private String type;
+    private CollectionType type;
     @Schema(description = "List of NFTS in this collection")
-    private List<NftDto> nfts;
+    private List<@Valid NftDto> nfts;
 }

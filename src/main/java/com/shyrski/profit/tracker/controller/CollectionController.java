@@ -68,5 +68,5 @@ public interface CollectionController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(schema = @Schema(implementation = ExceptionDetails.class)))})
     @Operation(summary = "Create NFT collections")
-    void createCollections(@RequestParam Long portfolioId, @RequestBody List<CollectionDto> collectionDtos);
+    void createCollections(@RequestParam Long portfolioId, @Valid @RequestBody List<CollectionDto> collectionDtos);
 }

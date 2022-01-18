@@ -28,6 +28,8 @@ import com.shyrski.profit.tracker.repository.NftRepository;
 import com.shyrski.profit.tracker.repository.PortfolioRepository;
 import com.shyrski.profit.tracker.repository.specification.CollectionSpecification;
 import com.shyrski.profit.tracker.service.CollectionService;
+import com.shyrski.profit.tracker.validator.CollectionValidator;
+import com.shyrski.profit.tracker.validator.NftValidator;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +77,11 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     @Transactional
     public void createCollections(Long portfolioId, List<CollectionDto> collectionDtos) {
+        collectionDtos.forEach(collectionDto -> {
+            CollectionValidator.validateCollection(collectionDto);
+            collectionDto.getNfts().forEach(NftValidator::validateNft);
+        });
+
         List<Nft> nftsToCreate = new ArrayList<>();
         List<Collection> collectionsToCreate = collectionMapper.fromDtoList(collectionDtos);
 
@@ -90,7 +97,7 @@ public class CollectionServiceImpl implements CollectionService {
             }
         });
 
-        collectionRepository.saveAllAndFlush(collectionsToCreate);
+        collectionRepository.saveAll(collectionsToCreate);
         if (!nftsToCreate.isEmpty()) {
             nftRepository.saveAll(nftsToCreate);
         }

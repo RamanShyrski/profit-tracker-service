@@ -3,6 +3,8 @@ package com.shyrski.profit.tracker.model.db;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,6 +33,8 @@ public class Nft {
     private Long nftId;
     private String name;
     private String imageKey;
+    @Enumerated(EnumType.STRING)
+    private NftType type;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "COLLECTION_ID")
     private Collection collection;

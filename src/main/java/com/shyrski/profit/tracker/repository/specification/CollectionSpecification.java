@@ -1,13 +1,10 @@
 package com.shyrski.profit.tracker.repository.specification;
 
-
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -18,8 +15,10 @@ import org.springframework.data.jpa.domain.Specification;
 import com.shyrski.profit.tracker.model.db.Collection;
 import com.shyrski.profit.tracker.model.dto.collection.CollectionSearchDto;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+@Data
 @RequiredArgsConstructor
 public class CollectionSpecification implements Specification<Collection> {
 
@@ -48,28 +47,4 @@ public class CollectionSpecification implements Specification<Collection> {
 
         return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
     }
-
-    public CollectionSearchDto collectionSearchDto() {
-        return collectionSearchDto;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (CollectionSpecification) obj;
-        return Objects.equals(this.collectionSearchDto, that.collectionSearchDto);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(collectionSearchDto);
-    }
-
-    @Override
-    public String toString() {
-        return "CollectionSpecification[" +
-                "collectionSearchDto=" + collectionSearchDto + ']';
-    }
-
 }
