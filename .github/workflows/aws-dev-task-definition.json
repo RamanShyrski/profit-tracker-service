@@ -63,6 +63,10 @@
         {
           "valueFrom": "arn:aws:secretsmanager:eu-north-1:059526337803:secret:dev/profit-tracker-service:mariadb-url::",
           "name": "MARIADB_URL"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:eu-north-1:059526337803:secret:dev/profit-tracker-service:opensea-api-key::",
+          "name": "OPENSEA_API_KEY"
         }
       ],
       "dockerSecurityOptions": null,
