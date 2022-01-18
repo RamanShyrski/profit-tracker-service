@@ -60,7 +60,7 @@ public interface CollectionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content(schema = @Schema(implementation = ExceptionDetails.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
