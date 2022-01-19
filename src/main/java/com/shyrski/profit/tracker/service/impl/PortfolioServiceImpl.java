@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.shyrski.profit.tracker.mapper.PortfolioMapper;
+import com.shyrski.profit.tracker.mapper.mapstruct.PortfolioMapper;
 import com.shyrski.profit.tracker.model.db.Portfolio;
 import com.shyrski.profit.tracker.model.dto.PortfolioDto;
 import com.shyrski.profit.tracker.repository.PortfolioRepository;

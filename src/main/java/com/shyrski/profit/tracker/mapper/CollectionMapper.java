@@ -1,20 +1,19 @@
 package com.shyrski.profit.tracker.mapper;
 
-import static com.shyrski.profit.tracker.exception.message.ExceptionMessages.INVALID_COLLECTION_TYPE;
 import static com.shyrski.profit.tracker.exception.message.ExceptionMessages.INVALID_MARKETPLACE_NAME;
 import static com.shyrski.profit.tracker.exception.message.ExceptionMessages.INVALID_NETWORK_NAME;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import com.shyrski.profit.tracker.client.OpenSeaClient;
 import com.shyrski.profit.tracker.exception.ExceptionDetails;
 import com.shyrski.profit.tracker.exception.ServerException;
 import com.shyrski.profit.tracker.model.db.Collection;
@@ -24,69 +23,82 @@ import com.shyrski.profit.tracker.model.db.LogEntity;
 import com.shyrski.profit.tracker.model.db.Network;
 import com.shyrski.profit.tracker.model.db.Nft;
 import com.shyrski.profit.tracker.model.dto.collection.CollectionDto;
-import com.shyrski.profit.tracker.model.dto.nft.NftDto;
 import com.shyrski.profit.tracker.model.dto.opensea.OpenSeaCollectionDto;
+import com.shyrski.profit.tracker.model.dto.opensea.OpenSeaCollectionStatisticsResponse;
 import com.shyrski.profit.tracker.repository.CollectionMarketplaceRepository;
 import com.shyrski.profit.tracker.repository.NetworkRepository;
 import com.shyrski.profit.tracker.service.S3BucketService;
-import com.shyrski.profit.tracker.util.FileUtil;
 
-@Mapper(componentModel = "spring")
-public abstract class CollectionMapper {
+import lombok.RequiredArgsConstructor;
 
-    @Autowired
-    private S3BucketService s3BucketService;
-    @Autowired
-    private CollectionMarketplaceRepository collectionMarketplaceRepository;
-    @Autowired
-    private NetworkRepository networkRepository;
-    @Autowired
-    private NftMapper nftMapper;
+@Component
+@RequiredArgsConstructor
+public class CollectionMapper {
+
+    private final S3BucketService s3BucketService;
+    private final CollectionMarketplaceRepository collectionMarketplaceRepository;
+    private final NetworkRepository networkRepository;
+    private final NftMapper customNftMapper;
+    private final OpenSeaClient openSeaClient;
 
     @Value("${aws.s3.collection-image-bucket-name}")
     private String collectionsImagesBucketName;
 
-    @Mapping(target = "items", source = "nfts", qualifiedByName = "generateItems")
-    @Mapping(target = "image", source = "imageKey")
-    @Mapping(target = "network", source = "network.name")
-    @Mapping(target = "marketplace", source = "collectionMarketplace.name")
-    @Mapping(target = "nfts", source = "nfts", qualifiedByName = "mapNftListToDto")
-    public abstract CollectionDto toDto(Collection collection);
+    public List<CollectionDto> toDtoListFromOpensea(List<OpenSeaCollectionDto> openSeaCollectionDto) {
+        List<CollectionDto> resultList = new ArrayList<>();
 
-    public abstract List<CollectionDto> toDtoList(List<Collection> collection);
+        openSeaCollectionDto.forEach(openSeaCollection -> {
+            CollectionDto collection = new CollectionDto();
+            collection.setName(openSeaCollection.getName());
+            collection.setImage(openSeaCollection.getImageUrl());
+            collection.setMarketplace("Opensea");
+            collection.setIdInMarketplace(openSeaCollection.getSlug());
+            collection.setItems(openSeaCollection.getItems());
+            collection.setFloorPrice(mapPriceField(openSeaCollection.getStatistics().getFloorPrice(), "ETH"));
+            collection.setTradingVolume(mapPriceField(openSeaCollection.getStatistics().getTradingVolume(), "ETH"));
+            collection.setNetwork(null);
+            collection.setType(CollectionType.PUBLIC);
 
-    @Mapping(target = "idInMarketplace", source = "slug")
-    @Mapping(target = "marketplace", constant = "opensea")
-    @Mapping(target = "type", constant = "PUBLIC")
-    @Mapping(target = "image", source = "imageUrl")
-    public abstract CollectionDto toDto(OpenSeaCollectionDto openSeaCollectionDto);
+            resultList.add(collection);
+        });
 
-    @Mapping(target = "imageKey", source = "image", qualifiedByName = "uploadImageToS3")
-    @Mapping(target = "collectionMarketplace", source = "marketplace", qualifiedByName = "retrieveMarketplace")
-    @Mapping(target = "network", source = "network", qualifiedByName = "retrieveNetwork")
-    @Mapping(target = "nfts", source = "nfts", qualifiedByName = "mapNftListFromDto")
-    @Mapping(target = "type", source = "type", qualifiedByName = "retrieveCollectionType")
-    public abstract Collection fromDto(CollectionDto collectionDto);
+        return resultList;
+    }
 
-    public abstract List<Collection> fromDtoList(List<CollectionDto> collectionDto);
-
-    public abstract List<CollectionDto> toDtoListFromOpenSeaDtoList(List<OpenSeaCollectionDto> openSeaCollectionDto);
-
-    @Named("generateItems")
-    protected Long generateItems(List<Nft> nfts) {
-        if (isEmpty(nfts)) {
-            return 0L;
+    private String mapPriceField(BigDecimal value, String currency) {
+        if (isEmpty(value)) {
+            return null;
         }
-        return (long) nfts.size();
+        return value.setScale(2, RoundingMode.CEILING) + " " + currency;
     }
 
-    @Named("uploadImageToS3")
-    protected String uploadImageToS3(String based64Image) {
-        return s3BucketService.uploadImage(based64Image, collectionsImagesBucketName);
+    public List<Collection> toDatabaseList(List<CollectionDto> collectionDtos) {
+        List<Collection> resultList = new ArrayList<>();
+
+        collectionDtos.forEach(dto -> {
+            Collection collection = new Collection();
+
+            collection.setCollectionId(dto.getCollectionId());
+            if (dto.getCollectionId() == null) {
+                collection.setImageKey(s3BucketService.uploadImage(dto.getImage(), collectionsImagesBucketName));
+            } else {
+                collection.setImageKey(dto.getImage());
+            }
+            collection.setName(dto.getName());
+            collection.setType(dto.getType());
+            collection.setIdInMarketplace(dto.getIdInMarketplace());
+            collection.setCollectionMarketplace(retrieveMarketplace(dto.getMarketplace()));
+            collection.setNetwork(retrieveNetwork(dto.getNetwork()));
+            collection.setNfts(customNftMapper.toDatabaseList(dto.getNfts()));
+            collection.setLogEntity(new LogEntity());
+
+            resultList.add(collection);
+        });
+
+        return resultList;
     }
 
-    @Named("retrieveMarketplace")
-    protected CollectionMarketplace retrieveMarketplace(String marketplaceName) {
+    private CollectionMarketplace retrieveMarketplace(String marketplaceName) {
         if (isEmpty(marketplaceName)) {
             return null;
         }
@@ -95,8 +107,7 @@ public abstract class CollectionMapper {
 
     }
 
-    @Named("retrieveNetwork")
-    protected Network retrieveNetwork(String networkName) {
+    private Network retrieveNetwork(String networkName) {
         if (isEmpty(networkName)) {
             return null;
         }
@@ -104,27 +115,66 @@ public abstract class CollectionMapper {
                 .orElseThrow(() -> new ServerException(ExceptionDetails.badRequest(INVALID_NETWORK_NAME)));
     }
 
-    @Named("mapNftListFromDto")
-    protected List<Nft> mapNftListFromDto(List<NftDto> nfts) {
-        return nftMapper.fromDtoList(nfts);
+    public List<CollectionDto> toDtoList(List<Collection> collections) {
+        List<CollectionDto> resultList = new ArrayList<>();
+
+        collections.forEach(collection -> {
+            CollectionDto dto = new CollectionDto();
+
+            dto.setCollectionId(collection.getCollectionId());
+            dto.setName(collection.getName());
+            dto.setImage(collection.getImageKey());
+            dto.setItems(calculateItems(collection.getNfts()));
+            dto.setNetwork(Optional.ofNullable(collection.getNetwork())
+                    .map(Network::getName)
+                    .orElse(null));
+
+            dto.setIdInMarketplace(collection.getIdInMarketplace());
+
+            dto.setMarketplace(Optional.ofNullable(collection.getCollectionMarketplace())
+                    .map(CollectionMarketplace::getName)
+                    .orElse(null));
+
+            dto.setTradingVolume(retrieveTradingVolume(collection));
+            dto.setFloorPrice(retrieveFloorPrice(collection));
+
+            dto.setType(collection.getType());
+            dto.setNfts(customNftMapper.toDtoList(collection.getNfts()));
+
+            resultList.add(dto);
+        });
+
+        return resultList;
     }
 
-    @Named("mapNftListToDto")
-    protected List<NftDto> mapNftListToDto(List<Nft> nfts) {
-        return nftMapper.toDtoList(nfts);
-    }
+    private String retrieveTradingVolume(Collection collection) {
+        if (collection.getType().equals(CollectionType.PUBLIC)) {
+            if (collection.getCollectionMarketplace().getName().equals("Opensea")) {
 
-    @Named("retrieveCollectionType")
-    protected CollectionType retrieveCollectionType(String collectionType) {
-        try {
-            return CollectionType.valueOf(collectionType);
-        } catch (IllegalArgumentException e) {
-            throw new ServerException(ExceptionDetails.badRequest(INVALID_COLLECTION_TYPE));
+                OpenSeaCollectionStatisticsResponse response =
+                        openSeaClient.retrieveCollectionStatistics(collection.getIdInMarketplace());
+                return mapPriceField(response.getStatistics().getTradingVolume(), "ETH");
+            }
         }
+        return null;
     }
 
-    @AfterMapping
-    public void createLogEntity(@MappingTarget Collection collection) {
-        collection.setLogEntity(new LogEntity());
+    private String retrieveFloorPrice(Collection collection) {
+        if (collection.getType().equals(CollectionType.PUBLIC)) {
+            if (collection.getCollectionMarketplace().getName().equals("Opensea")) {
+
+                OpenSeaCollectionStatisticsResponse response =
+                        openSeaClient.retrieveCollectionStatistics(collection.getIdInMarketplace());
+                return mapPriceField(response.getStatistics().getFloorPrice(), "ETH");
+            }
+        }
+        return null;
+    }
+
+    protected Long calculateItems(List<Nft> nfts) {
+        if (isEmpty(nfts)) {
+            return 0L;
+        }
+        return (long) nfts.size();
     }
 }

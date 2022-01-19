@@ -34,6 +34,10 @@ public class CollectionDto {
     private String idInMarketplace;
     @Schema(description = "If collection is public, it's marketplace name", example = "opensea")
     private String marketplace;
+    @Schema(description = "Total trading volume from marketplace")
+    private String tradingVolume;
+    @Schema(description = "Floor price from marketplace")
+    private String floorPrice;
     @NotNull
     @Schema(description = "CUSTOM or PUBLIC", example = "PUBLIC", required = true)
     private CollectionType type;

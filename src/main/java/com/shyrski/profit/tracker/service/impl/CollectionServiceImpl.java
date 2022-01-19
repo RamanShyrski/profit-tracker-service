@@ -38,8 +38,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CollectionServiceImpl implements CollectionService {
     private final CollectionRepository collectionRepository;
-    private final CollectionMapper collectionMapper;
     private final NftMapper nftMapper;
+    private final CollectionMapper customCollectionMapper;
     private final OpenSeaClient openSeaClient;
     private final PortfolioRepository portfolioRepository;
     private final NftRepository nftRepository;
@@ -49,7 +49,7 @@ public class CollectionServiceImpl implements CollectionService {
         CollectionSpecification specification = new CollectionSpecification(collectionSearchDto);
         List<Collection> collections = collectionRepository.findAll(specification);
 
-        return collectionMapper.toDtoList(collections);
+        return customCollectionMapper.toDtoList(collections);
     }
 
     @Override
@@ -61,18 +61,20 @@ public class CollectionServiceImpl implements CollectionService {
             throw new ServerException(ExceptionDetails.resourceNotFound(Resource.OPENSEA_ADDRESS, openSeaAddress));
         }
 
-        List<CollectionDto> collectionDtos = collectionMapper.toDtoListFromOpenSeaDtoList(collections);
+        List<CollectionDto> collectionDtos = customCollectionMapper.toDtoListFromOpensea(collections);
 
         collectionDtos.forEach(collectionDto -> {
             OpenSeaAssetsResponse collectionNftsDtos =
                     openSeaClient.findNftsInCollection(openSeaAddress, collectionDto.getIdInMarketplace(), 50, 0);
-            List<NftDto> nftDtos = nftMapper.toDtoListFromOpenSeaDtoList(collectionNftsDtos.getAssets());
+
+            List<NftDto> nftDtos = nftMapper.toDtoListFromOpensea(collectionNftsDtos.getAssets());
 
             collectionDto.setNfts(nftDtos);
         });
 
         return collectionDtos;
     }
+
 
     @Override
     @Transactional
@@ -83,7 +85,7 @@ public class CollectionServiceImpl implements CollectionService {
         });
 
         List<Nft> nftsToCreate = new ArrayList<>();
-        List<Collection> collectionsToCreate = collectionMapper.fromDtoList(collectionDtos);
+        List<Collection> collectionsToCreate = customCollectionMapper.toDatabaseList(collectionDtos);
 
         Portfolio portfolio = portfolioRepository.findById(portfolioId)
                 .orElseThrow(() -> new ServerException(ExceptionDetails.badRequest(INVALID_PORTFOLIO_ID)));

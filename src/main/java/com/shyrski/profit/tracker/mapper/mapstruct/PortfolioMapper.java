@@ -1,4 +1,4 @@
-package com.shyrski.profit.tracker.mapper;
+package com.shyrski.profit.tracker.mapper.mapstruct;
 
 import java.util.List;
 
