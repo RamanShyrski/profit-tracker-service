@@ -1,5 +1,6 @@
 package com.shyrski.profit.tracker.mapper;
 
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class NftMapper {
     private String nftsBucketName;
 
     public List<NftDto> toDtoListFromOpensea(List<OpenSeaNftDto> openSeaNftDtos) {
+        if (isEmpty(openSeaNftDtos)) {
+            return null;
+        }
+
         List<NftDto> resultList = new ArrayList<>();
 
         openSeaNftDtos.forEach(openSeaNftDto -> {
@@ -38,7 +43,7 @@ public class NftMapper {
             nftDto.setDescription(openSeaNftDto.getDescription());
             nftDto.setIdInMarketplace(openSeaNftDto.getId());
             nftDto.setTokenId(openSeaNftDto.getTokenId());
-            nftDto.setFloorPrice("Unknown");
+            nftDto.setFloorPrice(null);
             nftDto.setContractAddress(openSeaNftDto.getAssetContract().getAddress());
 
             resultList.add(nftDto);
@@ -48,6 +53,10 @@ public class NftMapper {
     }
 
     public List<Nft> toDatabaseList(List<NftDto> nftDtos) {
+        if (isEmpty(nftDtos)) {
+            return null;
+        }
+
         List<Nft> resultList = new ArrayList<>();
 
         nftDtos.forEach(dto -> {
@@ -77,6 +86,10 @@ public class NftMapper {
     }
 
     public List<NftDto> toDtoList(List<Nft> nfts) {
+        if (isEmpty(nfts)) {
+            return null;
+        }
+
         List<NftDto> resultList = new ArrayList<>();
 
         nfts.forEach(nft -> {

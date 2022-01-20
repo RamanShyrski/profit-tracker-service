@@ -1,10 +1,12 @@
 package com.shyrski.profit.tracker.service.impl;
 
 import static com.shyrski.profit.tracker.exception.message.ExceptionMessages.INVALID_PORTFOLIO_ID;
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,13 +77,14 @@ public class CollectionServiceImpl implements CollectionService {
         return collectionDtos;
     }
 
-
     @Override
     @Transactional
     public void createCollections(Long portfolioId, List<CollectionDto> collectionDtos) {
         collectionDtos.forEach(collectionDto -> {
             CollectionValidator.validateCollection(collectionDto);
-            collectionDto.getNfts().forEach(NftValidator::validateNft);
+            if (isNotEmpty(collectionDto.getNfts())) {
+                collectionDto.getNfts().forEach(NftValidator::validateNft);
+            }
         });
 
         List<Nft> nftsToCreate = new ArrayList<>();

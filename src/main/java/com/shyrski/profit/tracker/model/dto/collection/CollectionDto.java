@@ -32,6 +32,8 @@ public class CollectionDto {
     private String network;
     @Schema(description = "If collection is public, id in the marketplace", example = "my-collection-slug")
     private String idInMarketplace;
+    @Schema(description = "If collection is custom, collection url")
+    private String url;
     @Schema(description = "If collection is public, it's marketplace name", example = "opensea")
     private String marketplace;
     @Schema(description = "Total trading volume from marketplace")
@@ -41,6 +43,6 @@ public class CollectionDto {
     @NotNull
     @Schema(description = "CUSTOM or PUBLIC", example = "PUBLIC", required = true)
     private CollectionType type;
-    @Schema(description = "List of NFTS in this collection")
+    @Schema(description = "List of NFTs in this collection")
     private List<@Valid NftDto> nfts;
 }

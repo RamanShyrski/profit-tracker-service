@@ -37,6 +37,7 @@ public class Collection {
     @Enumerated(EnumType.STRING)
     private CollectionType type;
     private String idInMarketplace;
+    private String url;
     @ManyToOne
     @JoinColumn(name = "MARKETPLACE_ID")
     private CollectionMarketplace collectionMarketplace;

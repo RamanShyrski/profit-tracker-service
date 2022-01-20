@@ -45,6 +45,10 @@ public class CollectionMapper {
     private String collectionsImagesBucketName;
 
     public List<CollectionDto> toDtoListFromOpensea(List<OpenSeaCollectionDto> openSeaCollectionDto) {
+        if (isEmpty(openSeaCollectionDto)) {
+            return null;
+        }
+
         List<CollectionDto> resultList = new ArrayList<>();
 
         openSeaCollectionDto.forEach(openSeaCollection -> {
@@ -73,6 +77,9 @@ public class CollectionMapper {
     }
 
     public List<Collection> toDatabaseList(List<CollectionDto> collectionDtos) {
+        if (isEmpty(collectionDtos)) {
+            return null;
+        }
         List<Collection> resultList = new ArrayList<>();
 
         collectionDtos.forEach(dto -> {
@@ -87,6 +94,7 @@ public class CollectionMapper {
             collection.setName(dto.getName());
             collection.setType(dto.getType());
             collection.setIdInMarketplace(dto.getIdInMarketplace());
+            collection.setUrl(dto.getUrl());
             collection.setCollectionMarketplace(retrieveMarketplace(dto.getMarketplace()));
             collection.setNetwork(retrieveNetwork(dto.getNetwork()));
             collection.setNfts(customNftMapper.toDatabaseList(dto.getNfts()));
@@ -116,6 +124,10 @@ public class CollectionMapper {
     }
 
     public List<CollectionDto> toDtoList(List<Collection> collections) {
+        if (isEmpty(collections)) {
+            return null;
+        }
+
         List<CollectionDto> resultList = new ArrayList<>();
 
         collections.forEach(collection -> {
@@ -125,6 +137,7 @@ public class CollectionMapper {
             dto.setName(collection.getName());
             dto.setImage(collection.getImageKey());
             dto.setItems(calculateItems(collection.getNfts()));
+            dto.setUrl(collection.getUrl());
             dto.setNetwork(Optional.ofNullable(collection.getNetwork())
                     .map(Network::getName)
                     .orElse(null));
