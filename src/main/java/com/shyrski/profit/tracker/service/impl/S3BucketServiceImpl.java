@@ -8,7 +8,6 @@ import java.net.URLConnection;
 import java.util.Base64;
 import java.util.UUID;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.shyrski.profit.tracker.exception.ExceptionDetails;
 import com.shyrski.profit.tracker.exception.ServerException;
 import com.shyrski.profit.tracker.service.S3BucketService;
@@ -30,21 +27,6 @@ import lombok.RequiredArgsConstructor;
 public class S3BucketServiceImpl implements S3BucketService {
 
     private final AmazonS3 s3client;
-
-    @Override
-    public String retrieveBased64Image(String imageKey, String bucketName) {
-        S3Object s3object = s3client.getObject(bucketName, imageKey);
-        S3ObjectInputStream inputStream = s3object.getObjectContent();
-
-        byte[] bytes = new byte[0];
-        try {
-            bytes = IOUtils.toByteArray(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Base64.getEncoder().encodeToString(bytes);
-    }
 
     @Override
     public String uploadImage(String based64Image, String bucketName) {

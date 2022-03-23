@@ -24,9 +24,6 @@ public class NftServiceImpl implements NftService {
     public List<NftDto> findNftsInCollection(NftSearchDto nftSearchDto) {
         List<Nft> nfts = nftRepository.findAllBySearchCriteria(nftSearchDto.getCollectionId(), nftSearchDto.getName());
 
-        List<NftDto> nftDtos = nftMapper.toDtoList(nfts);
-
-        nftDtos.forEach(nftDto -> nftDto.setFloorPrice("100$"));
-        return nftDtos;
+        return nftMapper.toDtoList(nfts);
     }
 }
